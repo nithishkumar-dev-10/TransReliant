@@ -1,0 +1,4 @@
+backend/data/raw/
+backend/data/processed/
+backend/ml/*.pkl
+.env
