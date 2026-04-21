@@ -2,23 +2,23 @@ mode: "full"
 
 data:
   full:
-    ticket: "data/raw/ticket_confirmation.csv"
-    delay: "data/raw/delay_prediction.csv"
+    ticket: "backend/data/raw/ticket_confirmation.csv"
+    delay: "backend/data/raw/delay_prediction.csv"
   sample:
-    ticket: "data/sample_data.csv"
-    delay: "data/sample_data.csv"
+    ticket: "backend/data/sample_data.csv"
+    delay: "backend/data/sample_data.csv"
   processed:
-    ticket: "data/processed/ticket_cleaned.csv"
-    delay: "data/processed/delay_cleaned.csv"
+    ticket: "backend/data/processed/ticket_cleaned.csv"
+    delay: "backend/data/processed/delay_cleaned.csv"
 
 features:
   ticket:
     target: "Confirmation Status"
     drop:
       - "PNR Number"
-      - "Booking Date"
-      - "Booking Channel"
       - "Current Status"
+      - "Age of Passengers"
+      - "Booking Channel"
     use:
       - "Train Number"
       - "Date of Journey"
@@ -26,19 +26,19 @@ features:
       - "Quota"
       - "Source Station"
       - "Destination Station"
+      - "Booking Date"
       - "Travel Distance"
       - "Number of Stations"
       - "Travel Time"
       - "Train Type"
       - "Seat Availability"
+      - "Special Considerations"
       - "Holiday or Peak Season"
       - "Waitlist Position"
       - "Number of Passengers"
-      - "Age of Passengers"
-      - "Special Considerations"
 
   delay:
-    target: "Dealy_min"
+    target: "Delay_min"
     drop:
       - "Train_id"
       - "Train_name"
@@ -47,7 +47,7 @@ features:
     use:
       - "Train_no"
       - "Source"
-      - "Destitnation"
+      - "Destination"
       - "Date"
       - "Distance(Km)"
       - "Season"
@@ -55,10 +55,10 @@ features:
 
 models:
   classifier:
-    path: "ml/classifier_model.pkl"
+    path: "backend/ml/classifier_model.pkl"
     type: "RandomForest"
   regressor:
-    path: "ml/regressor_model.pkl"
+    path: "backend/ml/regressor_model.pkl"
     type: "RandomForestRegressor"
 
 reliability:
