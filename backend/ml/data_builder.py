@@ -46,42 +46,42 @@ def load_data(config):
 # cleaning the ticket_confirmation data
 
 def clean_ticket(df, config):
-    # strip whitespace from column names
     df.columns = df.columns.str.strip()
 
-    # drop rows with missing values FIRST
+    # fill NaN waitlist position with 0
+    # confirmed tickets have no WL number — that's valid, treat as 0
+    df["Waitlist Position"] = df["Waitlist Position"].fillna(0)
+
+    # NOW dropna on remaining columns — won't touch confirmed rows
     df = df.dropna()
 
-    # convert target column to binary BEFORE dropping anything
+    # convert target to binary
     df["Confirmation Status"] = df["Confirmation Status"].map(
         {"Confirmed": 1, "Not Confirmed": 0}
     )
     df = df.dropna(subset=["Confirmation Status"])
 
-    # extract features from Date of Journey BEFORE dropping it
-    df["Date of Journey"] = pd.to_datetime(
-        df["Date of Journey"], errors="coerce"
-    )
+    # strip WL prefix and convert to number
+    df["Waitlist Position"] = df["Waitlist Position"].astype(str).str.replace("WL", "", regex=False).str.strip()
+    df["Waitlist Position"] = pd.to_numeric(df["Waitlist Position"], errors="coerce").fillna(0)
+
+    # extract from Date of Journey
+    df["Date of Journey"] = pd.to_datetime(df["Date of Journey"], errors="coerce")
     df["journey_month"]     = df["Date of Journey"].dt.month
     df["journey_dayofweek"] = df["Date of Journey"].dt.dayofweek
 
-    # extract days before journey BEFORE dropping Booking Date
-    df["Booking Date"] = pd.to_datetime(
-        df["Booking Date"], errors="coerce"
-    )
-    df["days_before_journey"] = (
-        df["Date of Journey"] - df["Booking Date"]
-    ).dt.days
+    # extract days before journey
+    df["Booking Date"] = pd.to_datetime(df["Booking Date"], errors="coerce")
+    df["days_before_journey"] = (df["Date of Journey"] - df["Booking Date"]).dt.days
+    df = df.dropna(subset=["days_before_journey"])
 
-    # NOW drop useless columns after extracting what we need
+    # drop columns
     drop_cols = config["features"]["ticket"]["drop"]
     df = df.drop(columns=drop_cols, errors="ignore")
     df = df.drop(columns=["Date of Journey", "Booking Date"], errors="ignore")
 
     print(f"Ticket cleaned: {df.shape}")
     return df
-
-# cleaning the delay data 
 
 def clean_delay(df, config):
     # fix typos in column names from raw data
