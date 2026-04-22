@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestClassifier,RandomForestRegressor
+from xgboost import XGBClassifier, XGBRegressor
 from sklearn.preprocessing import LabelEncoder
 import yaml
 import os
@@ -119,8 +119,15 @@ def train_classifier(tickect_df):
 
     #setting the exact pipeline for the model
 
-    pipeline=Pipeline(steps=[("preprocessor",preprocessor),("model",RandomForestClassifier( n_estimators=100, max_depth=10, min_samples_split=10, min_samples_leaf=5, random_state=42 ))])
-
+    pipeline = Pipeline(steps=[
+    ("preprocessor", preprocessor),
+    ("model", XGBClassifier(
+        n_estimators=100,
+        max_depth=4,
+        learning_rate=0.1,
+        random_state=42,
+        eval_metric="logloss"
+    ))])
     #test train split 
     X_train,X_test,y_train,y_test=train_test_split(X,y,test_size=0.2,random_state=42)  
 
@@ -159,12 +166,19 @@ def train_regressor(delay_df):
 
     preprocessor=build_preprocessor(label_cols=label_cols,onehot_cols=onehot_cols,numeric_cols=numeric_cols)
 
-    pipeline=Pipeline(steps=[("preprocessor",preprocessor),("model",RandomForestRegressor(random_state=42)  )])
+    pipeline = Pipeline(steps=[
+    ("preprocessor", preprocessor),
+    ("model", XGBRegressor(
+        n_estimators=100,
+        max_depth=4,
+        learning_rate=0.1,
+        random_state=42
+    ))])
+    X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42)
 
-    X_train,X_test,y_train,y_test=train_test_split(X,y,test_size=0.2,random_state=42)
-
-    pipeline.fit(X_train,y_train)
-
+    pipeline.fit(X_train, y_train)
+    
     y_pred=pipeline.predict(X_test)
 
     mae=mean_absolute_error(y_test,y_pred)

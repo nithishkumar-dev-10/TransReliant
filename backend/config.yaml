@@ -56,10 +56,10 @@ features:
 models:
   classifier:
     path: "backend/ml/classifier_model.pkl"
-    type: "RandomForest"
+    type: "XGBClassifier"
   regressor:
     path: "backend/ml/regressor_model.pkl"
-    type: "RandomForestRegressor"
+    type: "XGBRegressor"
 
 reliability:
   weights:
