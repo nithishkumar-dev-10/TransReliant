@@ -1,7 +1,7 @@
-from pydantic import Basemodel
+from pydantic import BaseModel
 from typing import Optional
 
-class TicketInput(Basemodel):
+class TicketInput(BaseModel):
     Train_Number: int
     Class_of_Travel: str
     Quota: str
@@ -20,7 +20,7 @@ class TicketInput(Basemodel):
     journey_dayofweek: int
     days_before_journey: int
 
-class DelayInput(Basemodel):
+class DelayInput(BaseModel):
     Train_no: int
     Source: str
     Destination: str
@@ -31,6 +31,6 @@ class DelayInput(Basemodel):
     journey_dayofweek: int
 
 
-class PredictionRequest(Basemodel):
+class PredictionRequest(BaseModel):
     ticket: TicketInput
     delay:  DelayInput

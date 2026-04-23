@@ -1,7 +1,7 @@
-from schemas.request import TicketInput, DelayInput
-from utils.feature_encoder import encode_ticket_input, encode_delay_input
-from ml.prediction import load_config, load_model, predict_confirmation, predict_delay  
-from core.reliability import calculate_reliability
+from backend.transport.schemas.request import TicketInput, DelayInput
+from backend.transport.utils.feature_encoder import encode_ticket_input, encode_delay_input
+from backend.ml.prediction import load_config, load_model, predict_confirmation, predict_delay
+from backend.transport.core.reliability import calculate_reliability
 
 config=load_config()
 classifier, regressor = load_model(config)
