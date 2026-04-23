@@ -1,5 +1,4 @@
 from schemas.request import TicketInput, DelayInput
-from schemas.response import TicketPrediction, DelayPrediction
 from utils.feature_encoder import encode_ticket_input, encode_delay_input
 from ml.prediction import load_config, load_model, predict_confirmation, predict_delay  
 from core.reliability import calculate_reliability
@@ -7,7 +6,7 @@ from core.reliability import calculate_reliability
 config=load_config()
 classifier, regressor = load_model(config)
 
-def run_prediction_service(ticket_input: TicketInput, delay_input: DelayInput):
+async def run_prediction_service(ticket_input: TicketInput, delay_input: DelayInput):
     # Step 1: Encode inputs
     tickect_dict=encode_ticket_input(ticket_input)
     delay_dict=encode_delay_input(delay_input)

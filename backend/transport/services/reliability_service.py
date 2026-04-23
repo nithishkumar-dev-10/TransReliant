@@ -5,12 +5,7 @@ from core.reliability import calculate_reliability
 
 # Part 2 — get_reliability
 # Thin wrapper that gives reliability its own clean service layer
-def get_reliability(
-    confirmation_probability: float,
-    delay_minutes: float,
-    source: str,
-    destination: str
-) -> dict:
+def get_reliability(confirmation_probability: float,delay_minutes: float,source: str,destination: str) -> dict:
 
     # Call core reliability logic and return result directly
     return calculate_reliability(
@@ -19,3 +14,4 @@ def get_reliability(
         source                   = source,
         destination              = destination
     )
+
