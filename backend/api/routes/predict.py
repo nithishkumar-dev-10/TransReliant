@@ -7,7 +7,7 @@ router = APIRouter()
 @router.post("/predict")
 async def predict(request: PredictionRequest):
     try:
-        result = await run_prediction_service(request.ticket_input, request.delay_input)
+        result = result = await run_prediction_service(request.ticket, request.delay)
         return result
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
