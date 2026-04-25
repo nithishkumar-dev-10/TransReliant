@@ -1,30 +1,49 @@
+
 import pandas as pd
 import yaml
+import os
 
 def load_config():
-    with open("backend/config.yaml","r") as f:
+    base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    config_path = os.path.join(base_dir, "config.yaml")
+    with open(config_path, "r") as f:
         return yaml.safe_load(f)
+
+
+def load_train_databases(config):
+    ticket_df = pd.read_csv(config["data"]["full"]["ticket"])
+    delay_df  = pd.read_csv(config["data"]["full"]["delay"])
+    return ticket_df, delay_df
+
+def lookup_train(train_number: int) -> dict:
+    config = load_config()
+    ticket_df, delay_df = load_train_databases(config)
+
     
-def load_lookup_data(config):
-    ticket_path=config["data"]["processed"]["ticket"]
-    delay_path=config["data"]["processed"]["delay"]
-
-    ticket_df=pd.read_csv(ticket_path)
-    delay_df=pd.read_csv(delay_path)
-
-    return ticket_df,delay_df
-
-def lookup_train(train_number: int, ticket_df: pd.DataFrame, delay_df: pd.DataFrame) -> dict:
-
     ticket_row = ticket_df[ticket_df["Train Number"] == train_number]
     if ticket_row.empty:
-        raise ValueError(f"Train {train_number} not found in ticket CSV.")
+        raise ValueError(f"Train {train_number} not found in ticket database")
 
+    
     delay_row = delay_df[delay_df["Train_no"] == train_number]
     if delay_row.empty:
-        raise ValueError(f"Train {train_number} not found in delay CSV.")
+        raise ValueError(f"Train {train_number} not found in delay database")
 
+    # extract first matching row from each
+    t = ticket_row.iloc[0]
+    d = delay_row.iloc[0]
+
+    
     return {
-        "ticket": ticket_row.iloc[0].to_dict(),
-        "delay":  delay_row.iloc[0].to_dict()
+        "Train_Type":             t["Train Type"],
+        "Travel_Distance":        float(t["Travel Distance"]),
+        "Number_of_Stations":     int(t["Number of Stations"]),
+        "Travel_Time":            float(t["Travel Time"]),
+        "Seat_Availability":      str(t["Seat Availability"]),
+        "Special_Considerations": str(t["Special Considerations"]),
+        "Quota":                  str(t["Quota"]),
+        "Distance_Km":            float(d["Distance(Km)"]),
+        "Run_frequency":          str(d["Run_frequency"]),
+        "Season":                 str(d["Season"]),
+        "Train_name":             str(d["Train_name"]),
     }
