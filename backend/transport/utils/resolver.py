@@ -18,7 +18,7 @@ def get_season(month: int) -> str:
 
 def is_peak_season(month: int, dayofweek: int) -> str:
     peak_months  = [1, 4, 5, 10, 11, 12]
-    peak_days    = [4, 6]  # Friday, Sunday
+    peak_days    = [4, 6]  
     if month in peak_months or dayofweek in peak_days:
         return "Yes"
     return "No"
