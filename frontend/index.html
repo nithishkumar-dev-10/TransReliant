@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TransReliant — Railway Reliability Predictor</title>
+  <style>
+    /* Base reset and dark theme */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background-color: #0f0f0f;
+      color: #f0f0f0;
+      font-family: 'Segoe UI', sans-serif;
+      min-height: 100vh;
+    }
+
+    /* Navbar */
+    nav {
+      background-color: #1a1a1a;
+      padding: 18px 40px;
+      display: flex;
+      align-items: center;
+      border-bottom: 2px solid #ff6a00;
+    }
+
+    nav h1 {
+      font-size: 1.5rem;
+      color: #ff6a00;
+      letter-spacing: 1px;
+    }
+
+    nav span {
+      color: #f0f0f0;
+      font-size: 0.9rem;
+      margin-left: 16px;
+      opacity: 0.6;
+    }
+
+    /* Main container */
+    .container {
+      max-width: 720px;
+      margin: 50px auto;
+      padding: 0 20px;
+    }
+
+    /* Hero text */
+    .hero {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .hero h2 {
+      font-size: 2rem;
+      color: #ff6a00;
+      margin-bottom: 10px;
+    }
+
+    .hero p {
+      color: #aaa;
+      font-size: 1rem;
+    }
+
+    /* Form card */
+    .form-card {
+      background-color: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      border-radius: 12px;
+      padding: 36px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-group.full-width {
+      grid-column: span 2;
+    }
+
+    label {
+      font-size: 0.85rem;
+      color: #ff6a00;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    input, select {
+      background-color: #0f0f0f;
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 12px 14px;
+      color: #f0f0f0;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border 0.2s;
+    }
+
+    input:focus, select:focus {
+      border-color: #ff6a00;
+    }
+
+    select option {
+      background-color: #1a1a1a;
+    }
+
+    /* Submit button */
+    .btn {
+      width: 100%;
+      margin-top: 28px;
+      padding: 14px;
+      background-color: #ff6a00;
+      color: #0f0f0f;
+      font-size: 1rem;
+      font-weight: 700;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      letter-spacing: 0.5px;
+      transition: background 0.2s;
+    }
+
+    .btn:hover { background-color: #e05e00; }
+    .btn:disabled { background-color: #555; cursor: not-allowed; }
+
+    /* Loading state */
+    .loading {
+      text-align: center;
+      margin-top: 30px;
+      color: #ff6a00;
+      font-size: 0.95rem;
+      display: none;
+    }
+
+    /* Error message */
+    .error-msg {
+      margin-top: 20px;
+      padding: 14px;
+      background-color: #2a1010;
+      border: 1px solid #ff4444;
+      border-radius: 8px;
+      color: #ff6666;
+      font-size: 0.9rem;
+      display: none;
+    }
+
+    /* Results section */
+    .results {
+      margin-top: 40px;
+      display: none;
+    }
+
+    .results h3 {
+      font-size: 1.2rem;
+      color: #ff6a00;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+    }
+
+    /* Result card */
+    .result-card {
+      background-color: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      border-radius: 12px;
+      padding: 24px;
+      text-align: center;
+      transition: border 0.2s;
+    }
+
+    .result-card:hover { border-color: #ff6a00; }
+
+    .result-card .card-title {
+      font-size: 0.8rem;
+      color: #aaa;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+    }
+
+    .result-card .card-value {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #ff6a00;
+      margin-bottom: 6px;
+    }
+
+    .result-card .card-label {
+      font-size: 0.85rem;
+      color: #f0f0f0;
+      opacity: 0.7;
+    }
+
+    /* Label color coding */
+    .label-high   { color: #44ff88 !important; }
+    .label-medium { color: #ffcc00 !important; }
+    .label-low    { color: #ff4444 !important; }
+    .label-slight { color: #ffcc00 !important; }
+    .label-moderate { color: #ff9900 !important; }
+    .label-severe { color: #ff4444 !important; }
+    .label-ontime { color: #44ff88 !important; }
+
+    /* Reliability score bar */
+    .score-bar-wrap {
+      margin-top: 24px;
+      background-color: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      border-radius: 12px;
+      padding: 24px;
+    }
+
+    .score-bar-wrap .bar-title {
+      font-size: 0.85rem;
+      color: #aaa;
+      margin-bottom: 10px;
+    }
+
+    .score-bar-bg {
+      background-color: #2a2a2a;
+      border-radius: 999px;
+      height: 10px;
+      overflow: hidden;
+    }
+
+    .score-bar-fill {
+      height: 100%;
+      border-radius: 999px;
+      background-color: #ff6a00;
+      transition: width 0.8s ease;
+    }
+
+    .score-number {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #ff6a00;
+      margin-top: 12px;
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .form-grid { grid-template-columns: 1fr; }
+      .form-group.full-width { grid-column: span 1; }
+      .results-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav>
+    <h1>TransReliant</h1>
+    <span>Indian Railways Reliability Predictor</span>
+  </nav>
+
+  <div class="container">
+
+    <!-- Hero -->
+    <div class="hero">
+      <h2>Will Your Train Make It?</h2>
+      <p>Enter your journey details and get an instant reliability prediction.</p>
+    </div>
+
+    <!-- Form -->
+    <div class="form-card">
+      <div class="form-grid">
+
+        <div class="form-group">
+          <label>Train Number</label>
+          <input type="number" id="train_number" placeholder="e.g. 51450" />
+        </div>
+
+        <div class="form-group">
+          <label>Class of Travel</label>
+          <select id="class_of_travel">
+            <option value="">Select Class</option>
+            <option value="SL">SL — Sleeper</option>
+            <option value="3A">3A — Third AC</option>
+            <option value="2A">2A — Second AC</option>
+            <option value="1A">1A — First AC</option>
+            <option value="CC">CC — Chair Car</option>
+            <option value="2S">2S — Second Sitting</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Source Station Code</label>
+          <input type="text" id="source_station" placeholder="e.g. NDLS" />
+        </div>
+
+        <div class="form-group">
+          <label>Destination Station Code</label>
+          <input type="text" id="destination_station" placeholder="e.g. CSMT" />
+        </div>
+
+        <div class="form-group">
+          <label>Date of Journey</label>
+          <input type="date" id="date_of_journey" />
+        </div>
+
+        <div class="form-group">
+          <label>Number of Passengers</label>
+          <input type="number" id="number_of_passengers" placeholder="e.g. 2" min="1" />
+        </div>
+
+        <div class="form-group full-width">
+          <label>Waitlist Position (0 if confirmed)</label>
+          <input type="number" id="waitlist_position" placeholder="e.g. 45 or 0" min="0" value="0"/>
+        </div>
+
+      </div>
+
+      <button class="btn" onclick="predict()">Check Reliability</button>
+    </div>
+
+    <!-- Loading -->
+    <div class="loading" id="loading">⏳ Analysing your journey...</div>
+
+    <!-- Error -->
+    <div class="error-msg" id="error-msg"></div>
+
+    <!-- Results -->
+    <div class="results" id="results">
+      <h3>Prediction Results</h3>
+
+      <div class="results-grid">
+
+        <!-- Ticket card -->
+        <div class="result-card">
+          <div class="card-title">Confirmation</div>
+          <div class="card-value" id="conf-prob">—</div>
+          <div class="card-label" id="conf-label">—</div>
+        </div>
+
+        <!-- Delay card -->
+        <div class="result-card">
+          <div class="card-title">Expected Delay</div>
+          <div class="card-value" id="delay-time">—</div>
+          <div class="card-label" id="delay-label">—</div>
+        </div>
+
+        <!-- Reliability card -->
+        <div class="result-card">
+          <div class="card-title">Reliability</div>
+          <div class="card-value" id="rel-score">—</div>
+          <div class="card-label" id="rel-label">—</div>
+        </div>
+
+      </div>
+
+      <!-- Score bar -->
+      <div class="score-bar-wrap">
+        <div class="bar-title">Overall Reliability Score</div>
+        <div class="score-bar-bg">
+          <div class="score-bar-fill" id="score-bar" style="width: 0%"></div>
+        </div>
+        <div class="score-number" id="score-number">0 / 100</div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // Helper — apply color class based on label
+    function getLabelClass(label) {
+      const l = label.toLowerCase();
+      if (l.includes("high"))     return "label-high";
+      if (l.includes("medium"))   return "label-medium";
+      if (l.includes("on time"))  return "label-ontime";
+      if (l.includes("slight"))   return "label-slight";
+      if (l.includes("moderate")) return "label-moderate";
+      if (l.includes("severe"))   return "label-severe";
+      if (l.includes("low"))      return "label-low";
+      return "";
+    }
+
+    // Main predict function
+    async function predict() {
+      // Read form values
+      const train_number         = parseInt(document.getElementById("train_number").value);
+      const class_of_travel      = document.getElementById("class_of_travel").value;
+      const source_station       = document.getElementById("source_station").value.trim().toUpperCase();
+      const destination_station  = document.getElementById("destination_station").value.trim().toUpperCase();
+      const date_of_journey      = document.getElementById("date_of_journey").value;
+      const number_of_passengers = parseInt(document.getElementById("number_of_passengers").value);
+      const waitlist_position    = parseFloat(document.getElementById("waitlist_position").value) || 0;
+
+      // Basic validation
+      if (!train_number || !class_of_travel || !source_station || !destination_station || !date_of_journey || !number_of_passengers) {
+        showError("Please fill in all fields before submitting.");
+        return;
+      }
+
+      // Show loading
+      showLoading(true);
+      hideResults();
+      hideError();
+
+      // Build request body
+      const body = {
+        user: {
+          train_number,
+          source_station,
+          destination_station,
+          date_of_journey,
+          class_of_travel,
+          number_of_passengers,
+          waitlist_position
+        }
+      };
+
+      try {
+        const response = await fetch("http://127.0.0.1:8000/api/predict", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body)
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          showError(data.detail || "Something went wrong. Please try again.");
+          return;
+        }
+
+        // Render results
+        renderResults(data);
+
+      } catch (err) {
+        showError("Could not connect to server. Make sure the backend is running.");
+      } finally {
+        showLoading(false);
+      }
+    }
+
+    // Render all result cards
+    function renderResults(data) {
+      const confProb  = data.ticket.confirmation_probability;
+      const confLabel = data.ticket.confirmation_label;
+      const delayTime = data.delay.delay_readable;
+      const delayLabel= data.delay.delay_label;
+      const relScore  = data.reliability.score;
+      const relLabel  = data.reliability.label;
+
+      // Confirmation card
+      document.getElementById("conf-prob").textContent  = confProb + "%";
+      const confLabelEl = document.getElementById("conf-label");
+      confLabelEl.textContent  = confLabel;
+      confLabelEl.className    = "card-label " + getLabelClass(confLabel);
+
+      // Delay card
+      document.getElementById("delay-time").textContent  = delayTime;
+      const delayLabelEl = document.getElementById("delay-label");
+      delayLabelEl.textContent = delayLabel;
+      delayLabelEl.className   = "card-label " + getLabelClass(delayLabel);
+
+      // Reliability card
+      document.getElementById("rel-score").textContent  = relScore;
+      const relLabelEl = document.getElementById("rel-label");
+      relLabelEl.textContent   = relLabel;
+      relLabelEl.className     = "card-label " + getLabelClass(relLabel);
+
+      // Score bar
+      document.getElementById("score-bar").style.width    = relScore + "%";
+      document.getElementById("score-number").textContent = relScore + " / 100";
+
+      // Show results
+      document.getElementById("results").style.display = "block";
+    }
+
+    function showLoading(val) {
+      document.getElementById("loading").style.display = val ? "block" : "none";
+    }
+
+    function hideResults() {
+      document.getElementById("results").style.display = "none";
+    }
+
+    function showError(msg) {
+      const el = document.getElementById("error-msg");
+      el.textContent = msg;
+      el.style.display = "block";
+    }
+
+    function hideError() {
+      document.getElementById("error-msg").style.display = "none";
+    }
+  </script>
+
+</body>
+</html>
