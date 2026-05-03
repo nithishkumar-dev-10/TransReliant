@@ -13,8 +13,7 @@ def load_config():
 
 def delay_to_reliability(delay_minutes: float) -> float:
     # Indian Railways context:
-    # delays are common and expected
-    # penalty is gradual not harsh
+    
 
     if delay_minutes <= 30:
         # very common — almost no penalty
@@ -87,6 +86,7 @@ def calculate_reliability(confirmation_probability: float, delay_minutes: float,
         "delay_reliability": delay_score,
         "historical_score":  historical_score
     }
+
 
 
 if __name__ == "__main__":
