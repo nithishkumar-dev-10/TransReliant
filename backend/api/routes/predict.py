@@ -8,7 +8,6 @@ from backend.transport.services.prediction_service import run_prediction_service
 router = APIRouter()
 
 
-
 @router.post("/predict")
 async def predict(request: PredictionRequest):
     try:

@@ -1,50 +1,40 @@
-"""importing the required libraries and modules """
+# importing all the required library
 
 import pandas as pd
+import numpy as np
 import yaml
 import os
 
-
-"""defining the function to build the data for training and testing the model"""
-
-
-#loading the config file
+#loading the config 
 
 def load_config():
-    with open("backend/config.yaml", "r") as f:
-        return yaml.safe_load(f)
+    with open("bakend/config.yaml","r") as f:
+        return yaml.safe.load(f)
     
-
-
-
-# loading the data based on the specified mode in the config file
-
+#loading the data
 def load_data(config):
-    mode = config["mode"]
 
-    if mode == "full":
-        ticket_path = config["data"]["full"]["ticket"]
-        delay_path  = config["data"]["full"]["delay"]
+    mode=config["mode"]
 
-    elif mode == "sample":
-        ticket_path = config["data"]["sample"]["ticket"]
-        delay_path  = config["data"]["sample"]["delay"]
+    if mode=="sample":
+        ticket_path=config["data"]["sample"]["ticket"]
+        delay_path=config["data"]["sample"]["delay"]
+    elif mode=="full":
 
+        ticket__path=config["data"]["full"]["ticket"]
+        delay_path=config["data"]["full"]["delay"]
     else:
-        raise ValueError(f"Invalid mode: {mode}. Use 'full' or 'sample'")
+        raise ValueError("Invalid mode in config.yaml. Must be 'sample' or 'full'.")
+    
+    ticket_df=pd.read_csv(ticket_path)
+    delay_df=pd.read_csv(delay_path)
 
-    ticket_df = pd.read_csv(ticket_path)
-    delay_df  = pd.read_csv(delay_path)
-
-    print(f"Mode     : {mode}")
     print(f"Ticket   : {ticket_df.shape}")
     print(f"Delay    : {delay_df.shape}")
-
-    return ticket_df, delay_df
-
+    print(f"Mode     : {mode}")
 
 
-# cleaning the ticket_confirmation data
+#cleaning the data 
 
 def clean_ticket(df, config):
     df.columns = df.columns.str.strip()
@@ -128,41 +118,29 @@ def clean_delay(df, config):
     print(f"Delay cleaned: {df.shape}")
     return df
 
-# saving the cleaned data into the processed folder
-
 def save_processed(ticket_df, delay_df, config):
-    ticket_out = config["data"]["processed"]["ticket"]
-    delay_out  = config["data"]["processed"]["delay"]
+    
+    ticket_out=config["data"]["processed"]["ticket"]
+    delay_out=config["data"]["processed"]["delay"]
 
     os.makedirs("backend/data/processed", exist_ok=True)
 
     ticket_df.to_csv(ticket_out, index=False)
-    delay_df.to_csv(delay_out,   index=False)
+    delay_df.to_csv(delay_out, index=False)
 
-    print(f"Saved → {ticket_out}")
-    print(f"Saved → {delay_out}")
+    print(f"Processed data saved to {ticket_out} and {delay_out}")
 
-# creating the main function to call the defined functions in a proper order
+# main function to run the data processing steps
 
 if __name__ == "__main__":
-    config = load_config()
+     config = load_config()
 
-    ticket_df, delay_df = load_data(config)
+     ticket_df, delay_df = load_data(config)
 
-    ticket_df = clean_ticket(ticket_df, config)
-    delay_df  = clean_delay(delay_df,  config)
+     ticket_df=clean_ticket(ticket_df, config)
 
-    save_processed(ticket_df, delay_df, config)
+     delay_df=clean_delay(delay_df, config)
 
-    print("\n--- Ticket Sample ---")
-    print(ticket_df.head(3))
+     save_processed(ticket_df, delay_df, config)
 
-    print("\n--- Delay Sample ---")
-    print(delay_df.head(3))
-
-    print("\n--- Ticket Columns ---")
-    print(ticket_df.columns.tolist())
-
-    print("\n--- Delay Columns ---")
-    print(delay_df.columns.tolist())
-
+     print("Data processing complete.")
