@@ -12,7 +12,6 @@ from sklearn.metrics import f1_score,mean_absolute_error,accuracy_score,mean_squ
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder, OrdinalEncoder
 
 
-# loading the config file 
 
 def load_config():
     with open("backend/config.yaml","r") as f:
@@ -31,7 +30,7 @@ def load_data(config):
 
     return ticket_df,delay_df
 
-# split the label encoding and one hot encoding columns 
+
 
 def get_ticket_column_types(df, target):
     # ordered columns — label encode
@@ -42,7 +41,7 @@ def get_ticket_column_types(df, target):
         "days_before_journey"       # already numeric
     ]
 
-    # no-order categorical — one hot encode
+    
     onehot_cols = [
         "Class of Travel",
         "Quota",
@@ -53,7 +52,7 @@ def get_ticket_column_types(df, target):
         "Seat Availability"
     ]
 
-    # already numeric — pass through
+    
     numeric_cols = [
         col for col in df.columns
         if col not in label_cols
@@ -132,7 +131,7 @@ def train_classifier(tickect_df):
     #test train split 
     X_train,X_test,y_train,y_test=train_test_split(X,y,test_size=0.2,random_state=42)  
 
-    #doing the entire process of builiding the model,all process takes place here
+    
     pipeline.fit(X_train,y_train)
     
     #precditing the data 
