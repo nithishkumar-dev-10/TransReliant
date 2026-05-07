@@ -8,8 +8,8 @@ import os
 #loading the config 
 
 def load_config():
-    with open("bakend/config.yaml","r") as f:
-        return yaml.safe.load(f)
+    with open("backend/config.yaml","r") as f:
+        return yaml.safe_load(f)
     
 #loading the data
 def load_data(config):
@@ -21,7 +21,7 @@ def load_data(config):
         delay_path=config["data"]["sample"]["delay"]
     elif mode=="full":
 
-        ticket__path=config["data"]["full"]["ticket"]
+        ticket_path=config["data"]["full"]["ticket"]
         delay_path=config["data"]["full"]["delay"]
     else:
         raise ValueError("Invalid mode in config.yaml. Must be 'sample' or 'full'.")
@@ -32,6 +32,8 @@ def load_data(config):
     print(f"Ticket   : {ticket_df.shape}")
     print(f"Delay    : {delay_df.shape}")
     print(f"Mode     : {mode}")
+
+    return ticket_df,delay_df
 
 
 #cleaning the data 
