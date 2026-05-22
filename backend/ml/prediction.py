@@ -81,8 +81,10 @@ if __name__ == "__main__":
         "journey_dayofweek": 4
     }
 
+
     conf_result  = predict_confirmation(classifier, ticket_input)
     delay_result = predict_delay(regressor, delay_input)
+
 
     print("\n--- Prediction Results ---")
     print(f"Confirmation : {conf_result['confirmation_probability']}% ({conf_result['confirmation_label']})")
