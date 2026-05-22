@@ -113,7 +113,7 @@ def train_classifier(tickect_df):
     y=tickect_df[target]
     
     #we are calling the function we have defined before 
-    label_cols,onehot_cols,numeric_cols=get_ticket_column_types(X,target=target)
+    label_cols,onehot_cols,numeric_cols=get_ticket_column_types(X,target)
 
     preprocessor=build_preprocessor(label_cols=label_cols,onehot_cols=onehot_cols,numeric_cols=numeric_cols)
 
@@ -162,7 +162,7 @@ def train_regressor(delay_df):
 
     y=delay_df[target]
 
-    label_cols,onehot_cols,numeric_cols=get_delay_column_types(X,target=target)
+    label_cols,onehot_cols,numeric_cols=get_delay_column_types(X,target)
 
     preprocessor=build_preprocessor(label_cols=label_cols,onehot_cols=onehot_cols,numeric_cols=numeric_cols)
 
