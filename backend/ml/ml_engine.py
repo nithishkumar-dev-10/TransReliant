@@ -10,6 +10,7 @@ from sklearn.compose import ColumnTransformer
 import joblib
 from sklearn.metrics import f1_score,mean_absolute_error,accuracy_score,mean_squared_error,roc_auc_score
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder, OrdinalEncoder
+from sklearn.model_selection import train_test_split, GridSearchCV
 
 
 
@@ -99,95 +100,93 @@ def build_preprocessor(label_cols,onehot_cols,numeric_cols):
     return preprocessor
     # only the blue print is made , no real preprocessing is done here , the preprocessor will be fitted in the training function and then used for both train and test data to avoid data leakage
 
-# training the classifer model 
+# training the classifer model
 def train_classifier(tickect_df):
 
     config=load_config()
-    
     target=config["features"]["ticket"]["target"]
 
-    #removing the target coloumn from the dataset, keeping only the features for training
     X=tickect_df.drop(columns=[target])
-
-    #fixing the target coloumn 
     y=tickect_df[target]
-    
-    #we are calling the function we have defined before 
-    label_cols,onehot_cols,numeric_cols=get_ticket_column_types(X,target)
+    use_cols=config["features"]["ticket"]["use"]
+    X=X[use_cols]
 
+    label_cols,onehot_cols,numeric_cols=get_ticket_column_types(X,target)
     preprocessor=build_preprocessor(label_cols=label_cols,onehot_cols=onehot_cols,numeric_cols=numeric_cols)
 
-    #setting the exact pipeline for the model
+    X_train,X_test,y_train,y_test=train_test_split(X,y,test_size=0.2,random_state=42)
 
     pipeline = Pipeline(steps=[
     ("preprocessor", preprocessor),
-    ("model", XGBClassifier(
-        n_estimators=100,
-        max_depth=4,
-        learning_rate=0.1,
-        random_state=42,
-        eval_metric="logloss"
-    ))])
-    #test train split 
-    X_train,X_test,y_train,y_test=train_test_split(X,y,test_size=0.2,random_state=42)  
+    ("model", XGBClassifier(random_state=42, eval_metric="logloss"))])
 
-    
-    pipeline.fit(X_train,y_train)
-    
-    #precditing the data 
-    y_pred=pipeline.predict(X_test)
+    param_grid = {
+        "model__n_estimators"  : [100, 200, 300],
+        "model__max_depth"     : [3, 4, 6],
+        "model__learning_rate" : [0.05, 0.1, 0.2],
+    }
+   
+    grid = GridSearchCV(estimator=pipeline, param_grid=param_grid,
+                        cv=5, scoring="f1", n_jobs=-1, verbose=1)
 
-    #evaluating the model
-    y_pred      = pipeline.predict(X_test)
-    y_pred_prob = pipeline.predict_proba(X_test)[:, 1]
+    grid.fit(X_train, y_train)
 
-    f1  = f1_score(y_test, y_pred)
-    acc = accuracy_score(y_test, y_pred)
-    auc = roc_auc_score(y_test, y_pred_prob)
+    print(f"\nBest Params : {grid.best_params_}")
+    print(f"Best CV F1  : {grid.best_score_:.4f}")
+   
+    best_model  = grid.best_estimator_
+    y_pred      = best_model.predict(X_test)
+    y_pred_prob = best_model.predict_proba(X_test)[:, 1]
 
-    print(f"F1 Score : {f1:.4f}")
-    print(f"Accuracy : {acc:.4f}")
-    print(f"AUC      : {auc:.4f}")
+    print(f"\n--- Final Test Scores ---")
+    print(f"F1 Score : {f1_score(y_test, y_pred):.4f}")
+    print(f"Accuracy : {accuracy_score(y_test, y_pred):.4f}")
+    print(f"AUC      : {roc_auc_score(y_test, y_pred_prob):.4f}")
 
-    return pipeline
-
+    return best_model
 
 
 def train_regressor(delay_df):
     config=load_config()
-
     target=config["features"]["delay"]["target"]
 
     X=delay_df.drop(columns=[target])
-
     y=delay_df[target]
 
     label_cols,onehot_cols,numeric_cols=get_delay_column_types(X,target)
-
     preprocessor=build_preprocessor(label_cols=label_cols,onehot_cols=onehot_cols,numeric_cols=numeric_cols)
+
+   
+    X_train,X_test,y_train,y_test=train_test_split(X,y,test_size=0.2,random_state=42)
 
     pipeline = Pipeline(steps=[
     ("preprocessor", preprocessor),
-    ("model", XGBRegressor(
-        n_estimators=100,
-        max_depth=4,
-        learning_rate=0.1,
-        random_state=42
-    ))])
-    X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.2, random_state=42)
+    ("model", XGBRegressor(random_state=42))])
 
-    pipeline.fit(X_train, y_train)
-    
-    y_pred=pipeline.predict(X_test)
+   
+    param_grid = {
+        "model__n_estimators"  : [100, 200, 300],
+        "model__max_depth"     : [3, 4, 6],
+        "model__learning_rate" : [0.05, 0.1, 0.2],
+    }
 
-    mae=mean_absolute_error(y_test,y_pred)
-    mse=mean_squared_error(y_test,y_pred)
 
-    print(f"MAE : {mae}")
-    print(f"MSE : {mse}")
+    grid = GridSearchCV(estimator=pipeline, param_grid=param_grid,
+                        cv=5, scoring="neg_mean_absolute_error", n_jobs=-1, verbose=1)
 
-    return pipeline
+    grid.fit(X_train, y_train)
+
+    print(f"\nBest Params : {grid.best_params_}")
+    print(f"Best CV MAE : {-grid.best_score_:.4f}")
+
+    best_model = grid.best_estimator_
+    y_pred     = best_model.predict(X_test)
+
+    print(f"\n--- Final Test Scores ---")
+    print(f"MAE : {mean_absolute_error(y_test, y_pred):.4f}")
+    print(f"MSE : {mean_squared_error(y_test, y_pred):.4f}")
+
+    return best_model
 
 def save_models(classifier, regressor, config):
     os.makedirs("backend/ml", exist_ok=True)
