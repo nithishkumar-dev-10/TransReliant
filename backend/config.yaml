@@ -21,12 +21,10 @@ features:
       - "Booking Channel"
     use:
       - "Train Number"
-      - "Date of Journey"
       - "Class of Travel"
       - "Quota"
       - "Source Station"
       - "Destination Station"
-      - "Booking Date"
       - "Travel Distance"
       - "Number of Stations"
       - "Travel Time"
@@ -34,8 +32,10 @@ features:
       - "Seat Availability"
       - "Special Considerations"
       - "Holiday or Peak Season"
-      - "Waitlist Position"
       - "Number of Passengers"
+      - "journey_month"
+      - "journey_dayofweek"
+      - "days_before_journey"
 
   delay:
     target: "Delay_min"
@@ -66,4 +66,3 @@ reliability:
     confirmation: 0.5
     delay: 0.3
     historical: 0.2
-
