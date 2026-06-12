@@ -180,7 +180,7 @@ def train_regressor(delay_df):
     print(f"Best CV MAE : {-grid.best_score_:.4f}")
 
     best_model = grid.best_estimator_
-    y_pred     = best_model.predict(X_test)
+    y_pred = best_model.predict(X_test)
 
     print(f"\n--- Final Test Scores ---")
     print(f"MAE : {mean_absolute_error(y_test, y_pred):.4f}")
