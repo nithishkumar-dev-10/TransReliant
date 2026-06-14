@@ -193,12 +193,9 @@ def save_models(classifier, regressor, config):
 
     joblib.dump(classifier, config["models"]["classifier"]["path"])
     joblib.dump(regressor,  config["models"]["regressor"]["path"])
-
     
     print(f"Classifier → {config['models']['classifier']['path']}")
     print(f"Regressor  → {config['models']['regressor']['path']}")
-
-
 
 if __name__ == "__main__":
     config = load_config()
