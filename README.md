@@ -1,19 +1,30 @@
 <div align="center">
 
-# 🚆 TransReliant
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:FF6A00,100:1a1a1a&height=180&section=header&text=TransReliant&fontSize=55&fontColor=ffffff&animation=fadeIn&fontAlignY=38&desc=ML-Based%20Transport%20Reliability%20%26%20Risk%20Prediction%20System&descAlignY=58&descSize=18" width="100%"/>
 
-### ML-Based Transport Reliability & Risk Prediction System
+<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=20&duration=3000&pause=800&color=FF6A00&center=true&vCenter=true&width=700&lines=Predicting+journey+reliability+before+you+book.;Confirmation+%2B+Delay+%2B+Reliability+Score+%E2%80%94+one+API.;Deployed+%26+live+on+Render+%F0%9F%9A%80" alt="Typing SVG" />
+
+<br/>
 
 <p>
-<img src="https://img.shields.io/badge/Python-3.10+-3776AB?style=flat-square&logo=python&logoColor=white" />
-<img src="https://img.shields.io/badge/FastAPI-Backend-009688?style=flat-square&logo=fastapi&logoColor=white" />
-<img src="https://img.shields.io/badge/Docker-Containerized-2496ED?style=flat-square&logo=docker&logoColor=white" />
-<img src="https://img.shields.io/badge/scikit--learn-ML-F7931E?style=flat-square&logo=scikit-learn&logoColor=white" />
-<img src="https://img.shields.io/badge/SHAP-Explainability-8A2BE2?style=flat-square" />
-<img src="https://img.shields.io/badge/status-active-success?style=flat-square" />
+<img src="https://img.shields.io/badge/Python-3.10+-3776AB?style=for-the-badge&logo=python&logoColor=white" />
+<img src="https://img.shields.io/badge/FastAPI-Backend-009688?style=for-the-badge&logo=fastapi&logoColor=white" />
+<img src="https://img.shields.io/badge/Docker-Containerized-2496ED?style=for-the-badge&logo=docker&logoColor=white" />
+<img src="https://img.shields.io/badge/scikit--learn-ML-F7931E?style=for-the-badge&logo=scikit-learn&logoColor=white" />
+<img src="https://img.shields.io/badge/XGBoost-Model-016A70?style=for-the-badge" />
 </p>
 
-*Predicting whether your journey will actually go to plan — before you book it.*
+<p>
+<img src="https://img.shields.io/badge/status-live-brightgreen?style=for-the-badge" />
+<img src="https://img.shields.io/website?url=https%3A%2F%2Ftransreliant.onrender.com&style=for-the-badge&label=deployment" />
+<img src="https://img.shields.io/github/last-commit/nithishkumar-dev-10/TransReliant?style=for-the-badge&color=FF6A00" />
+</p>
+
+<br/>
+
+### 🔗 [**Launch Live App → transreliant.onrender.com**](https://transreliant.onrender.com)
+
+*No signup. No setup. Enter a journey, get a reliability score in seconds.*
 
 </div>
 
@@ -21,48 +32,52 @@
 
 ## 📖 Overview
 
-**TransReliant** is a Machine Learning + MLOps based system that quantifies transport reliability before a journey even happens. It answers three questions for a user:
+**TransReliant** is a Machine Learning + MLOps system that quantifies transport reliability *before* a journey happens. It answers three questions for any user, instantly:
 
 | # | Question | Output |
 |---|---|---|
-| 1 | Will my ticket get confirmed? | Confirmation probability |
-| 2 | How delayed will this transport be? | Delay risk (minutes) |
-| 3 | How reliable is this route overall? | Reliability Score (0–100) |
+| 1 | Will my ticket get confirmed? | Confirmation probability + label |
+| 2 | How delayed will this transport be? | Predicted delay (minutes) + severity |
+| 3 | How reliable is this route overall? | Unified Reliability Score (0–100) |
 
-The system combines **classification**, **regression**, **explainability**, and **deployment** into a single served pipeline using FastAPI and Docker.
+The system combines **classification**, **regression**, and **feature-engineered reliability scoring** into a single served pipeline — trained, containerized, and deployed end-to-end.
 
 ---
 
-## 🎯 Problem Statement
+## 🚀 Live Deployment
 
-Public transport systems carry built-in uncertainty — ticket confirmations and delays are unpredictable, and users have no data-backed way to gauge a journey's reliability before planning around it. TransReliant closes that gap with a single predictive reliability metric, generated from historical patterns rather than guesswork.
+| | |
+|---|---|
+| **Status** | 🟢 Live |
+| **URL** | [`transreliant.onrender.com`](https://transreliant.onrender.com) |
+| **Hosting** | Render (Docker Web Service) |
+| **Frontend** | Served directly from FastAPI (same-origin, single deployment) |
+| **API Docs** | [`/docs`](https://transreliant.onrender.com/docs) — interactive Swagger UI |
+| **Health Check** | [`/health`](https://transreliant.onrender.com/health) |
+
+> ⚠️ Hosted on Render's free tier — the instance sleeps after ~15 minutes of inactivity. First request after idle may take 30–50s to wake up.
 
 ---
 
 ## 🏗️ System Architecture
 
 ```
-┌────────────┐     ┌─────────┐     ┌────────────────┐     ┌───────────────────┐
-│ User Input │ ──▶ │ FastAPI │ ──▶ │ Preprocessing + │ ──▶ │   ML Model Layer   │
-└────────────┘     └─────────┘     │Feature Engineer.│     │ (Classify + Regress)│
-                                    └────────────────┘     └─────────┬──────────┘
-                                                                      ▼
-                                                            ┌───────────────────┐
-                                                            │  Explainability    │
-                                                            │  (SHAP / Feature   │
-                                                            │   Importance)      │
-                                                            └─────────┬──────────┘
-                                                                      ▼
-                                                            ┌───────────────────┐
-                                                            │  Reliability Index │
-                                                            └─────────┬──────────┘
-                                                                      ▼
-                                                            ┌───────────────────┐
-                                                            │ Response + Logging │
-                                                            └───────────────────┘
+┌────────────┐     ┌─────────┐     ┌────────────────┐     ┌──────────────────────┐
+│ User Input │ ──▶ │ FastAPI │ ──▶ │ Resolver +      │ ──▶ │    ML Model Layer     │
+│ (Frontend) │     │  Route  │     │ Feature Builder │     │ (Classifier + Regressor)│
+└────────────┘     └─────────┘     └────────────────┘     └──────────┬────────────┘
+                                                                       ▼
+                                                            ┌───────────────────────┐
+                                                            │  Reliability Engine    │
+                                                            │  (weighted scoring)    │
+                                                            └──────────┬────────────┘
+                                                                       ▼
+                                                            ┌───────────────────────┐
+                                                            │   JSON Response        │
+                                                            └───────────────────────┘
 ```
 
-> Entire pipeline is containerized with **Docker** for reproducible, portable deployment.
+> Fully containerized with **Docker**, served as a single deployable unit on Render.
 
 ---
 
@@ -76,25 +91,26 @@ Public transport systems carry built-in uncertainty — ticket confirmations and
 <tr>
 <td valign="top">
 
-**Type:** Classification
+**Type:** Classification (`XGBClassifier`)
 
-- Logistic Regression
-- Random Forest
-- Gradient Boosting
+- GridSearchCV hyperparameter tuning
+- OneHot + Ordinal encoding pipeline
+- 5-fold cross-validation
 
 **Evaluated on:**
-`ROC-AUC` · `Precision` · `Recall` · `F1-score`
+`F1-score` · `Accuracy` · `ROC-AUC`
 
 </td>
 <td valign="top">
 
-**Type:** Regression
+**Type:** Regression (`XGBRegressor`)
 
-- Random Forest Regressor
-- Gradient Boosting Regressor
+- GridSearchCV hyperparameter tuning
+- Consistent preprocessing pipeline
+- 5-fold cross-validation
 
 **Evaluated on:**
-`MAE` · `RMSE` · `Cross-validation`
+`MAE` · `MSE`
 
 </td>
 </tr>
@@ -106,35 +122,22 @@ Public transport systems carry built-in uncertainty — ticket confirmations and
 
 | Feature | Description |
 |---|---|
-| WL number encoding | Waitlist number transformed into a usable numeric signal |
-| Festival indicator | Flags high-demand festival/holiday periods |
-| Seasonality encoding | Month and day-of-week cyclic encoding |
-| Lag features | Previous delay trends carried forward |
-| Historical route confirmation ratio | Past confirmation rate per route |
-| Route demand index | Relative demand pressure on a given route |
-
----
-
-## 🔍 Explainability Layer
-
-Predictions aren't a black box — every response can surface *why* the model decided what it decided.
-
-- Feature importance analysis
-- SHAP values *(optional, per-request)*
-- Top influencing factors returned directly in the API response
+| Waitlist position | Numeric confirmation-risk signal |
+| Peak / holiday season flag | Derived from journey month + weekday |
+| Seasonality encoding | Month and day-of-week extraction |
+| Route-based lookups | Train type, seat availability, distance, station data |
+| Reliability weighting | Confirmation, delay, and historical signals combined |
 
 ---
 
 ## 📊 Reliability Score
 
-A single **0–100 score** computed from three weighted signals:
+A single **0–100 score**, computed from three weighted signals:
 
 ```
-Reliability Score = f(
-    confirmation_probability,   # weighted
-    delay_reliability,          # converted from predicted delay minutes
-    historical_route_reliability
-)
+Reliability Score = 0.5 × confirmation_probability
+                   + 0.3 × delay_reliability
+                   + 0.2 × historical_score
 ```
 
 ---
@@ -143,18 +146,45 @@ Reliability Score = f(
 
 | Method | Endpoint | Description |
 |---|---|---|
-| `POST` | `/predict/train` | Predict ticket confirmation probability |
-| `POST` | `/predict/delay` | Predict expected delay |
+| `POST` | `/api/predict` | Full prediction — confirmation, delay, reliability |
 | `GET` | `/health` | Service health check |
+| `GET` | `/docs` | Interactive Swagger API documentation |
+
+**Example request:**
+```bash
+curl -X POST https://transreliant.onrender.com/api/predict \
+  -H "Content-Type: application/json" \
+  -d '{
+    "user": {
+      "train_number": 51450,
+      "source_station": "NDLS",
+      "destination_station": "CSMT",
+      "date_of_journey": "2026-08-15",
+      "class_of_travel": "3A",
+      "number_of_passengers": 2,
+      "waitlist_position": 0
+    }
+  }'
+```
+
+**Example response:**
+```json
+{
+  "ticket": { "confirmation_probability": 66.24, "confirmation_label": "Medium" },
+  "delay": { "delay_minutes": 48.04, "delay_readable": "48m", "delay_label": "Moderate" },
+  "reliability": { "score": 69.21, "label": "Moderate Reliability" }
+}
+```
 
 ---
 
-## ⚙️ MLOps Components
+## ⚙️ Engineering & MLOps
 
-- ✅ Model persistence via `joblib` / `pickle`
-- ✅ Docker containerization for deployment
-- ✅ Prediction logging for monitoring & retraining
-- ✅ Structured, modular repository design
+- ✅ Model persistence via `joblib`
+- ✅ Docker containerization, deployed on Render
+- ✅ Frontend + backend served from a single container (no CORS overhead)
+- ✅ Clean modular repo — routes, services, schemas, core logic separated
+- ✅ Pydantic-validated request/response contracts
 
 ---
 
@@ -162,29 +192,41 @@ Reliability Score = f(
 
 ```
 TransReliant/
-├── data/
-├── notebooks/
-├── src/
-│   ├── preprocessing.py
-│   ├── feature_engineering.py
-│   ├── train.py
-│   └── predict.py
-├── api/
-├── models/
+├── backend/
+│   ├── api/routes/         # FastAPI route handlers
+│   ├── ml/                 # Trained models + training pipeline
+│   ├── transport/
+│   │   ├── core/           # Reliability scoring logic
+│   │   ├── schemas/        # Request / response models
+│   │   ├── services/       # Prediction orchestration
+│   │   └── utils/          # Resolver, train lookup, encoders
+│   ├── data/                # Raw + processed datasets
+│   └── config.yaml
+├── frontend/
+│   └── index.html           # Served directly by FastAPI
+├── tests/
 ├── Dockerfile
 └── README.md
 ```
 
 ---
 
+## 🛠️ Tech Stack
+
+`Python` · `FastAPI` · `XGBoost` · `scikit-learn` · `Pandas` · `Docker` · `Render` · `Pydantic`
+
+---
+
 ## 💼 Resume Description
 
-> Designed and deployed a predictive ML + MLOps system estimating ticket confirmation probability, delay risk, and transport reliability score using classification, regression, explainability, FastAPI deployment, and Docker containerization.
+> Designed, trained, and deployed a production ML system predicting ticket confirmation probability, delay risk, and a composite transport reliability score — built with FastAPI, XGBoost, and Docker, containerized and live-deployed on Render with a unified frontend + backend architecture.
 
 ---
 
 <div align="center">
 
 **Built by [Nithish Kumar](https://github.com/nithishkumar-dev-10)**
+
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:1a1a1a,100:FF6A00&height=100&section=footer" width="100%"/>
 
 </div>
