@@ -219,11 +219,7 @@ TransReliant/
 
 ---
 
-## 💼 Resume Description
 
-> Designed, trained, and deployed a production ML system predicting ticket confirmation probability, delay risk, and a composite transport reliability score — built with FastAPI, XGBoost, and Docker, containerized and live-deployed on Render with a unified frontend + backend architecture.
-
----
 
 <div align="center">
 
