@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from backend.api.routes.predict import router
 
 app = FastAPI(
@@ -18,6 +19,10 @@ app.add_middleware(
 
 app.include_router(router, prefix="/api")
 
-@app.get("/")
-async def root():
+@app.get("/health")
+async def health():
     return {"status": "running", "message": "Railway Prediction API is live"}
+
+# Serve the frontend (index.html) at the root URL.
+# Must be mounted LAST — StaticFiles at "/" would otherwise shadow /api and /health.
+app.mount("/", StaticFiles(directory="frontend", html=True), name="frontend")
