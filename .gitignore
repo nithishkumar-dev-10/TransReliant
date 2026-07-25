@@ -2,4 +2,4 @@ backend/data/raw/
 backend/data/processed/
 .env
 .DS_Store
-.venv
+venv
