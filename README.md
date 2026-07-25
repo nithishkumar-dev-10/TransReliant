@@ -19,7 +19,7 @@
 <p>
 <img src="https://img.shields.io/badge/status-live-brightgreen?style=for-the-badge" />
 <img src="https://img.shields.io/website?url=https%3A%2F%2Ftransreliant.onrender.com&style=for-the-badge&label=deployment" />
-<img src="https://img.shields.io/github/last-commit/nithishkumar-dev-10/TransReliant?style=for-the-badge&color=FF6A00" />
+
 </p>
 
 <br/>
