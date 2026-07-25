@@ -1,8 +1,10 @@
 <div align="center">
 
-<img src="https://capsule-render.vercel.app/api?type=waving&color=0:FF6A00,100:1a1a1a&height=180&section=header&text=TransReliant&fontSize=55&fontColor=ffffff&animation=fadeIn&fontAlignY=38&desc=ML-Based%20Transport%20Reliability%20%26%20Risk%20Prediction%20System&descAlignY=58&descSize=18" width="100%"/>
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:FF6A00,100:1a1a1a&height=180&section=header&text=TransReliant&fontSize=55&fontColor=ffffff&animation=fadeIn&fontAlignY=38" width="100%"/>
 
-<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=20&duration=3000&pause=800&color=FF6A00&center=true&vCenter=true&width=700&lines=Predicting+journey+reliability+before+you+book.;Confirmation+%2B+Delay+%2B+Reliability+Score+%E2%80%94+one+API.;Deployed+%26+live+on+Render+%F0%9F%9A%80" alt="Typing SVG" />
+<p><em>ML-Based Transport Reliability &amp; Risk Prediction System</em></p>
+
+<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=20&duration=3000&pause=800&color=FF6A00&center=true&vCenter=true&width=700&lines=Predicting+journey+reliability+before+you+book.;Confirmation+plus+Delay+plus+Reliability+Score.;Deployed+and+live+on+Render" alt="Typing SVG" />
 
 <br/>
 
@@ -227,6 +229,6 @@ TransReliant/
 
 **Built by [Nithish Kumar](https://github.com/nithishkumar-dev-10)**
 
-<img src="https://capsule-render.vercel.app/api?type=waving&color=0:1a1a1a,100:FF6A00&height=100&section=footer" width="100%"/>
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:1a1a1a,100:FF6A00&height=100&section=footer&animation=fadeIn" width="100%"/>
 
 </div>
